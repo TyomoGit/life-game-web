@@ -1,0 +1,17 @@
+{
+  "name": "life-game-web",
+  "collaborators": [
+    "TyomoGit"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "life_game_web_bg.wasm",
+    "life_game_web.js",
+    "life_game_web.d.ts"
+  ],
+  "module": "life_game_web.js",
+  "types": "life_game_web.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
