@@ -21,7 +21,7 @@ class DrawingInfo {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const board = this.game.board();
         ctx.fillStyle = "black";
-        for (let i = 0; i < this.width; i++) {
+        for (let i = 0; i < this.board.length / this.width; i++) {
             for (let j = 0; j < this.width; j++) {
                 if (board[i * this.width + j] !== 0) {
                     ctx.fillRect(j, i, 1, 1);

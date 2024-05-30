@@ -9,10 +9,10 @@ const rangeIntervalValue = document.getElementById("rangeIntervalValue") as HTML
 const buttonStart = document.getElementById("buttonStart") as HTMLButtonElement;
 
 class DrawingInfo {
-    game: wasm.GameWrapper;
-    width: number;
+    readonly game: wasm.GameWrapper;
+    readonly width: number;
     readonly interval: number;
-    board: Uint8Array;
+    readonly board: Uint8Array;
 
     constructor(game: wasm.GameWrapper, width: number, interval: number, board: Uint8Array) {
         this.game = game;
@@ -25,7 +25,7 @@ class DrawingInfo {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const board = this.game.board();
         ctx.fillStyle = "black";
-        for (let i = 0; i < this.width; i++) {
+        for (let i = 0; i < this.board.length / this.width; i++) {
             for (let j = 0; j < this.width; j++) {
                 if (board[i * this.width + j] !== 0) {
                     ctx.fillRect(j, i, 1, 1);
