@@ -4,16 +4,20 @@ const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 const rangeReduction = document.getElementById("rangeReduction") as HTMLInputElement;
 const rangeReductionValue = document.getElementById("rangeReductionValue") as HTMLLabelElement;
+const rangeInterval = document.getElementById("rangeInterval") as HTMLInputElement;
+const rangeIntervalValue = document.getElementById("rangeIntervalValue") as HTMLLabelElement;
 const buttonStart = document.getElementById("buttonStart") as HTMLButtonElement;
 
 class DrawingInfo {
     game: wasm.GameWrapper;
     width: number;
+    readonly interval: number;
     board: Uint8Array;
 
-    constructor(game: wasm.GameWrapper, width: number, board: Uint8Array) {
+    constructor(game: wasm.GameWrapper, width: number, interval: number, board: Uint8Array) {
         this.game = game;
         this.width = width;
+        this.interval = interval;
         this.board = board;
     }
 
@@ -43,24 +47,30 @@ init()
 async function main() {
     initEventListeners();
     rangeReductionValue.textContent = rangeReduction.valueAsNumber.toString();
+    rangeIntervalValue.textContent = rangeInterval.valueAsNumber.toString();
     drawingLoop(ctx);
 }
 
-async function start(reduction: number) {
+async function start(reduction: number, interval: number) {
     const width = canvas.width = Math.floor(canvas.clientWidth / reduction);
     const height = canvas.height = Math.floor(canvas.clientHeight / reduction);
 
     const game = new wasm.GameWrapper(width, height, true);
     
-    drawingInfo = new DrawingInfo(game, width, game.board());
+    drawingInfo = new DrawingInfo(game, width, interval, game.board());
 }
 
 function initEventListeners() {
     rangeReduction.addEventListener("input", () => {
         rangeReductionValue.textContent = rangeReduction.valueAsNumber.toString();
     })
+
+    rangeInterval.addEventListener("input", () => {
+        rangeIntervalValue.textContent = rangeInterval.valueAsNumber.toString();
+    })
+
     buttonStart.addEventListener("click", () => {
-        start(rangeReduction.valueAsNumber);
+        start(rangeReduction.valueAsNumber, rangeInterval.valueAsNumber);
     });
 }
 
@@ -73,6 +83,6 @@ async function drawingLoop(ctx: CanvasRenderingContext2D) {
 
         drawingInfo.next(ctx);
 
-        await new Promise(resolve => setTimeout(resolve, 1));
+        await new Promise(resolve => setTimeout(resolve, drawingInfo?.interval ?? 100));
     }
 }
